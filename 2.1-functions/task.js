@@ -91,17 +91,16 @@ console.log(
   })
 );
 
-//Задача №3
+//Задача №3 Переделал, теперь все работает как надо
 function getPersonData(secretData) {
-  let newSecretData;
-  for (let key in secretData) {
-    let secret = secretData[key];
-    //newSecretData[key] = getDecodedValue(secret);
-    newSecretData = {
-      firstName: getDecodedValue(secret),
-      lastName: getDecodedValue(secret),
-    };
-  }
+  // for (let key in secretData) { Неправильный вариант
+  //   let secret = secretData[key];
+  //newSecretData[key] = getDecodedValue(secret);
+  let newSecretData = {
+    firstName: getDecodedValue(secretData.aaa),
+    lastName: getDecodedValue(secretData.bbb),
+  };
+  //}
 
   return newSecretData;
 }
