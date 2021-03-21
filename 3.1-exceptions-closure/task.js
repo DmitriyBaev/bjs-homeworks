@@ -12,8 +12,7 @@ function parseCount(value) {
 
 function validateCount(value) {
   try {
-    const parcedValue2 = parseCount(value);
-    return parcedValue2;
+    return parseCount(value);
   } catch (error) {
     return error;
   }
@@ -38,21 +37,20 @@ class Triangle {
     }
 
     getPerimeter() { //считаем периметр
-      return (this.a + this.b + this.c).toFixed(3);
+      return +(this.a + this.b + this.c).toFixed(3);
     }
 
     getArea() { // считаем площадь
         const p = 1/2 * this.getPerimeter();
         let area = Math.sqrt(p * (p - this.a) * (p - this.b) * (p - this.c));
-        return area.toFixed(3)
+        return +area.toFixed(3)
     }
 }
 
     function getTriangle(a, b, c) {
         try { 
-          const value = new Triangle (a, b, c);
-          console.log(value);
-          return value
+          console.log(new Triangle (a, b, c));
+          return new Triangle (a, b, c)
         }
         catch (error) {
           const value2 = {
@@ -68,6 +66,6 @@ class Triangle {
         }
     }
 
-    getTriangle (200, 5, 5)
+    //getTriangle (200, 5, 5)
     
         
