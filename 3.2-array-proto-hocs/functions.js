@@ -12,73 +12,46 @@ const weapons = [
   new Bow(),
 ];
 
+// возвращает имена всех оружий
 function getNames() {
-  // возвращает имена всех оружий
-  const weaponsName = weapons.map((weapon) => {
-    return weapon.name;
-  });
-  console.log(weaponsName);
-  return weaponsName;
+  return weapons.map(weapon => weapon.name)
 }
 
+// принимает значение прочности и возвращает количество оружий больше принимаемой прочности
 function getCountReliableWeapons(durability) {
-  // принимает значение прочности и возвращает количество оружий больше принимаемой прочности
-  const durabilityWeapon = weapons
-    .filter((weapon) => weapon.durability > durability)
-    .map((weapon) => {
-      return weapon.durability;
-    });
-  console.log(durabilityWeapon.length);
-  return durabilityWeapon.length;
+  return weapons.filter(weapon => weapon.durability > durability).length;
 }
 
+// принимает значение прочности и возвращает вердикт: есть ли оружия прочней принимаемой прочности
 function hasReliableWeapons(durability) {
-  // принимает значение прочности и возвращает вердикт: есть ли оружия прочней принимаемой прочности
-  const hasWeaponDurability = weapons.some(
-    (weapon) => weapon.durability > durability
-  );
-  console.log(hasWeaponDurability);
-  return hasWeaponDurability;
+  return weapons.some(weapon => weapon.durability > durability)
 }
 
+// принимает значение прочности и возвращает имена оружий, которые прочней полученного значения
 function getReliableWeaponsNames(durability) {
-  // принимает значение прочности и возвращает имена оружий, которые прочней полученного значения
-  const weaponDurabilityNames = weapons
-    .filter((weapon) => weapon.durability > durability)
-    .map((weapon) => {
-      return weapon.name;
-    });
-  console.log(weaponDurabilityNames);
-  return weaponDurabilityNames;
+  return weapons.filter(weapon => weapon.durability > durability).map((weapon) => weapon.name)
 }
 
+// возвращает общую сумму урона всех оружий
 function getTotalDamage() {
-  // возвращает общую сумму урона всех оружий
-  let sum = 0;
-  const totalDamage = weapons.map((weapon) => {
-    sum = weapon.attack + sum;
-    return sum;
-  });
-  console.log(totalDamage[totalDamage.length - 1]);
-  return totalDamage[totalDamage.length - 1];
+  return weapons.reduce((accumulator, weapon) => accumulator + weapon.attack, 0)
 }
 
 function getValuestCountToSumValues(numbers, sum) {
-  let sumValues = 0;
-  let i = 0;
-  numbers.some((number) => {
-    sumValues = number + sumValues;
-    i++;
-    if (sumValues >= sum) {
-      console.log(i);
-      return i;
-    }
-  });
-  if (sumValues < sum) {
-    console.log(numbers.length);
-    return numbers.length;
+
+  return numbers.reduce(function(accumulator, number) {
+    if (accumulator >= sum)
+    return accumulator + number
+    let i = 0;
+    const accum = {sumReduce: accumulator + number, quality: i++}
+    if(accum.sumReduce >= sum) {
+      return i
+  } else {
+    return numbers.length
   }
+}), 0
 }
+
 
 //возвращает 4, т.к. 1+2+3=6 (3 числа), а 1+2+3+5=11 (4 числа)
 getValuestCountToSumValues([1, 2, 3, 5, 2, 7, 3, 5, 2], 10);
@@ -101,22 +74,8 @@ function sum(...args) {
 }
 
 function compareArrays(arr1, arr2) {
-  let i = 0;
-  function toEqual(number) {
-    if (number === arr2[i] && arr1.length === arr2.length) {
-      console.log(number);
-      console.log(arr2[i]);
-      i++;
-      console.log(true);
-      return true;
-    } else {
-      console.log(false);
-      return false;
-    }
+    return arr1.every(number => (arr1.length === arr2.length) && (number === arr2[arr1.indexOf(number)]));      
   }
-  //console.log(arr1.every(toEqual))
-  return arr1.every(toEqual);
-}
 
 // compareArrays([8, 9], [6]); // false, разные значения
 // compareArrays([8, 9, 5, 4], [8, 9, 5, 4, 8, 3, 5]); // false, разные значения
@@ -124,53 +83,45 @@ function compareArrays(arr1, arr2) {
 // compareArrays([1, 2, 3], [2, 3, 1]); // false, разные индексы, хотя и одинаковые значения
 // compareArrays([8, 1, 2], [8, 1, 2]); // true
 
-// const limit = 10;
-// function memorize(sum, limit) {
-//     const mSum = memorize(sum, 5) {
-//         memory.find
-//         }; // 5 результатов может хранится в памяти
-//     const memory = []
-//     return mSum(...args)
-// }
 
-const limit = 10; 
-function memorize(f, limit) {
-  const memory = [
-    {
-      args: [3, 4],
-      result: 7,
-    },
-    {
-      args: [1, 3],
-      result: 4,
-    },
-  ];
+function memorize(f, limit = 10) {
+  const memory = [];
 
   const mSum = (...rest) => {
-    //console.log(f(...rest));
-    const arrArg = rest;
-    //console.log(rest)
+   
+    memory.find((element) => {if (compareArrays(element.args, rest)) {
+      console.log(element.args);
+      console.log(rest);
+      console.log(`Результат вычислений - ${element.result} берется из памяти.`);
+      return element.result
+    }
+    })
 
-    memory.find((element) => {
-      if (compareArrays(element.args, arrArg)) {
-        console.log(element.result);
-        return element.result;
-        
-      } else {
-        const newResult = f(...rest)
-        console.log(newResult);
-        memory.push({args:[...rest], result: newResult});
+     const resultF = f(...rest);
+        console.log(`Функция вызвана не из памяти. Результат вычислений ${resultF}.`);
+        memory.push({args: rest, result: resultF});
         if (memory.length > limit) {
-          memory.shift(0)
+          memory.shift()
         }
-      }
-    });
-  };
+      } 
+  
   console.log(memory)
   return mSum;
-  
 }
+
 
 const resultFunction = memorize((a, b) => a + b);
 resultFunction(3, 4); // <= должно вывести: 7
-resultFunction(5, 4); // <= ничего не найдёт в памяти.
+resultFunction(3, 4); // <= должно вывести: 7 (но БЕЗ ВЫЧИСЛЕНИЙ, а с помощью нахождения элемента в памяти)
+resultFunction(5, 4); // <= ничего не найдёт в памяти. (но НЕОБХОДИМО ПОЛУЧИТЬ РЕЗУЛЬТАТ)
+resultFunction(3, 4); // <= должно вывести: 7
+resultFunction(3, 4);
+resultFunction(3, 4);
+resultFunction(3, 4);
+resultFunction(3, 4);
+resultFunction(3, 4);
+resultFunction(3, 4);
+resultFunction(3, 4);
+resultFunction(3, 4);
+resultFunction(3, 4);
+resultFunction(8, 9);
