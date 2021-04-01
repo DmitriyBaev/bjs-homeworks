@@ -29,22 +29,36 @@ class AlarmClock {
 
     getCurrentFormattedTime() {
         let date = new Date;
-        const currentTime = `${date.getHours()}:${date.getMinutes()}`;
+        let hours, min;
+        
+        if (date.getHours() < 10) {
+            hours = `0${date.getHours()}`
+        } else {
+            hours = date.getHours()
+        }
+
+        if (date.getMinutes() < 10) {
+            min = `0${date.getMinutes()}`
+        } else {
+            min = date.getMinutes()
+        }
+        const currentTime = `${hours}:${min}`;
+        console.log(currentTime)
         return currentTime
     }
 
     start() {
-        function checkClock(element) {
-            if(getCurrentFormattedTime() === element.time) {
-                element.callback()
+        const checkClock = (element) => {
+            if(this.getCurrentFormattedTime() === element.time) {
+                return element.callback()
               }
         }
                 
         if(!this.timerId) {
-            const startAllCalls = function() {
+            const startAllCalls = () => {
             this.alarmCollection.forEach(element => checkClock(element))
             }
-            this.timerId = setInterval(startAllCalls, 0);
+            this.timerId = setInterval(startAllCalls, 1000);
         }        
     }
         
@@ -57,28 +71,29 @@ class AlarmClock {
     }
 
     printAlarms() {
-        this.alarmCollection.forEach(element => console.log(`Будильник №${element.id}, заведен на${element.time}`))
+        this.alarmCollection.forEach(element => console.log(`Будильник №${element.id}, заведен на${ element.time}`))
     }
 
     clearAlarms() {
-        this.alarmCollection.forEach(element => clearInterval(element.id))
+        this.alarmCollection.forEach(element => clearInterval(element.id));
+        this.alarmCollection = []
     }
 }
 
 function testCase() {
     const myAlarmClock = new AlarmClock();
-    myAlarmClock.addClock('14:11',() => {console.log('Вставай'); console.log('Вставай'); console.log('Вставай')}, 1);
-    // myAlarmClock.addClock('13:12',() => {
-    //     console.log('Вставай, уже');
-    //     myAlarmClock.removeClock(2)}, 2);  
-    // myAlarmClock.addClock('13:13', () => console.log('Вставай, все проспишь'));
-    // myAlarmClock.addClock('13:13', () => {
-    //     console.log('Вставай, все проспишь');
-    //     myAlarmClock.clearAlarms();
-    //     myAlarmClock.printAlarms()}, 3);
-    // myAlarmClock.addClock('13:13',() => console.log('Вставай'), 1)
-    // myAlarmClock.printAlarms();
-    myAlarmClock.start()
+    myAlarmClock.addClock('21:29',() => {console.log('Вставай'); console.log('Вставай'); console.log('Вставай')}, 1);
+    myAlarmClock.addClock('13:12',() => {console.log('Вставай, уже');
+    myAlarmClock.removeClock(2)}, 2);  
+    //myAlarmClock.addClock('13:13', () => console.log('Вставай, все проспишь'));
+    myAlarmClock.addClock('13:13', () => {
+        console.log('Вставай, все проспишь');
+        myAlarmClock.clearAlarms();
+        myAlarmClock.printAlarms()}, 3);
+    myAlarmClock.addClock('13:13',() => console.log('Вставай'), 1)
+    myAlarmClock.printAlarms();
+    myAlarmClock.start();
+    console.log(myAlarmClock)
 }
 
 testCase()
