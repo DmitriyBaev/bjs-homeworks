@@ -39,17 +39,17 @@ function getTotalDamage() {
 
 function getValuestCountToSumValues(numbers, sum) {
 
-  return numbers.reduce(function(accumulator, number) {
-    if (accumulator >= sum)
-    return accumulator + number
+  return numbers.reduce(function (accumulator, number) {
+    // if (accumulator >= sum)
+    //   return accumulator + number
     let i = 0;
-    const accum = {sumReduce: accumulator + number, quality: i++}
-    if(accum.sumReduce >= sum) {
+    const accum = { sumReduce: accumulator + number, quality: i++ }
+    if (accum.sumReduce >= sum) {
       return i
-  } else {
-    return numbers.length
-  }
-}), 0
+    } else {
+      return numbers.length
+    }
+  }, { sumReduce: 0, quality: 0 })
 }
 
 
@@ -62,7 +62,7 @@ getValuestCountToSumValues([1, 2, 3, 5, 2, 7, 3, 5, 2], 20);
 
 function sleep(milliseconds) {
   let e = new Date().getTime() + milliseconds;
-  while (new Date().getTime() <= e) {}
+  while (new Date().getTime() <= e) { }
 }
 
 function sum(...args) {
@@ -74,8 +74,8 @@ function sum(...args) {
 }
 
 function compareArrays(arr1, arr2) {
-    return arr1.every(number => (arr1.length === arr2.length) && (number === arr2[arr1.indexOf(number)]));      
-  }
+  return arr1.every(number => (arr1.length === arr2.length) && (number === arr2[arr1.indexOf(number)]));
+}
 
 // compareArrays([8, 9], [6]); // false, разные значения
 // compareArrays([8, 9, 5, 4], [8, 9, 5, 4, 8, 3, 5]); // false, разные значения
@@ -84,44 +84,42 @@ function compareArrays(arr1, arr2) {
 // compareArrays([8, 1, 2], [8, 1, 2]); // true
 
 
-function memorize(f, limit = 10) {
+function memorize(f, limit = 5) {
   const memory = [];
-
-  const mSum = (...rest) => {
-   
-    memory.find((element) => {if (compareArrays(element.args, rest)) {
-      console.log(element.args);
-      console.log(rest);
-      console.log(`Результат вычислений - ${element.result} берется из памяти.`);
-      return element.result
-    }
-    })
-
-     const resultF = f(...rest);
-        console.log(`Функция вызвана не из памяти. Результат вычислений ${resultF}.`);
-        memory.push({args: rest, result: resultF});
-        if (memory.length > limit) {
-          memory.shift()
-        }
-      } 
-  
   console.log(memory)
-  return mSum;
+
+  return (...rest) => {
+
+    const findElement = memory.find(element => compareArrays(element.args, rest));
+
+    if (findElement) {
+      return findElement.result //(`Результат вычислений - ${findElement.result} берется из памяти.`)
+    } else {
+      const resultF = f(...rest);
+      memory.push({ args: rest, result: resultF });
+      if (memory.length > limit) {
+        memory.shift()
+      }
+      return resultF //(`Функция вызвана не из памяти. Результат вычислений ${resultF}.`);
+    }
+  }
 }
 
 
-const resultFunction = memorize((a, b) => a + b);
-resultFunction(3, 4); // <= должно вывести: 7
-resultFunction(3, 4); // <= должно вывести: 7 (но БЕЗ ВЫЧИСЛЕНИЙ, а с помощью нахождения элемента в памяти)
-resultFunction(5, 4); // <= ничего не найдёт в памяти. (но НЕОБХОДИМО ПОЛУЧИТЬ РЕЗУЛЬТАТ)
-resultFunction(3, 4); // <= должно вывести: 7
-resultFunction(3, 4);
-resultFunction(3, 4);
-resultFunction(3, 4);
-resultFunction(3, 4);
-resultFunction(3, 4);
-resultFunction(3, 4);
-resultFunction(3, 4);
-resultFunction(3, 4);
-resultFunction(3, 4);
-resultFunction(8, 9);
+const resultFunction = memorize((a, b, c, d) => a + b + c + d);
+//const resultFunction = memorize((a,b) => a * b);
+//const resultFunction = memorize((a,b,c) => b ** 2 - 4 * a * c);
+
+console.log(resultFunction(3, 8, 6, 7));
+console.log(resultFunction(8, 8, 6, 7));
+console.log(resultFunction(4, 8, 6, 7));
+console.log(resultFunction(9, 8, 6, 7));
+console.log(resultFunction(6, 3, 6, 7));
+console.log(resultFunction(3, 8, 6, 7));
+console.log(resultFunction(3, 8, 6, 7));
+console.log(resultFunction(3, 8, 6, 7));
+console.log(resultFunction(3, 8, 6, 7));
+console.log(resultFunction(3, 8, 6, 7));
+console.log(resultFunction(3, 8, 6, 7));
+console.log(resultFunction(3, 8, 6, 9));
+console.log(resultFunction(9, 8, 3, 7));

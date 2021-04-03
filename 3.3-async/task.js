@@ -2,8 +2,8 @@
 
 class AlarmClock {
     constructor() {
-        this.alarmCollection = []
-        this.timerId
+        this.alarmCollection = [];
+        this.timerId = null;
     }
 
     addClock(time, callback, id) {
@@ -23,7 +23,9 @@ class AlarmClock {
     }
 
     removeClock(id) {
+        const before = this.alarmCollection;
         this.alarmCollection = this.alarmCollection.filter(item => item.id !== id);
+        console.log(before.length > this.alarmCollection.length);
         //  здесь должна быть проверка об успешности/провале удаления объекта звонка из общего массива
     }
 
@@ -66,7 +68,7 @@ class AlarmClock {
     stop() {
         if(this.timerId) {
             clearInterval(this.timerId);
-            delete this.timerId;
+            this.timerId = null;
         }
     }
 
