@@ -39,16 +39,16 @@ function getTotalDamage() {
 
 function getValuestCountToSumValues(numbers, sum) {
 
-  return numbers.reduce(function (accumulator, number) {
-    // if (accumulator >= sum)
-    //   return accumulator + number
-    let i = 0;
-    const accum = { sumReduce: accumulator + number, quality: i++ }
-    if (accum.sumReduce >= sum) {
-      return i
-    } else {
-      return numbers.length
-    }
+  numbers.reduce(function (accumulator, number) {
+    return {sumReduce: accumulator.sumReduce + number, quality: accumulator.quality + 1}
+    
+  //  return () => { if (accumulator.sumReduce < sum)
+  //   { return {sumReduce: accumulator.sumReduce + number, quality: accumulator.quality + 1}
+  //   } else {
+  //     return accumulator.quality
+  //   } 
+  // }
+  
   }, { sumReduce: 0, quality: 0 })
 }
 
